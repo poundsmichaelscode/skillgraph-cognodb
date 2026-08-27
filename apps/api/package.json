@@ -9,7 +9,8 @@
     "start": "node dist/server.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "db:schema": "tsx src/database/setup-schema.ts"
   },
   "dependencies": {
     "cors": "^2.8.5",
