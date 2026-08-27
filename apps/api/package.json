@@ -10,7 +10,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
-    "db:schema": "tsx src/database/setup-schema.ts"
+    "db:schema": "tsx src/database/setup-schema.ts",
+    "db:seed": "tsx src/database/seed.ts"
   },
   "dependencies": {
     "cors": "^2.8.5",
