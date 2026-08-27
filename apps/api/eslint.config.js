@@ -1,9 +1,9 @@
-import eslint from '@eslint/js';
-import globals from 'globals';
-import tseslint from 'typescript-eslint';
+import eslint from "@eslint/js";
+import globals from "globals";
+import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ['dist/**', 'coverage/**'] },
+  { ignores: ["dist/**", "coverage/**"] },
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
   {
@@ -11,14 +11,17 @@ export default tseslint.config(
       globals: globals.node,
       parserOptions: {
         projectService: {
-          allowDefaultProject: ['eslint.config.js', 'tests/*.ts'],
+          allowDefaultProject: ["eslint.config.js", "tests/*.ts"],
         },
         tsconfigRootDir: import.meta.dirname,
       },
     },
     rules: {
-      '@typescript-eslint/consistent-type-imports': 'error',
-      '@typescript-eslint/no-misused-promises': ['error', { checksVoidReturn: false }],
+      "@typescript-eslint/consistent-type-imports": "error",
+      "@typescript-eslint/no-misused-promises": [
+        "error",
+        { checksVoidReturn: false },
+      ],
     },
   },
 );

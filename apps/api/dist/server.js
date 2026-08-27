@@ -1,20 +1,56 @@
-import { createApp } from './app.js';
-const DEFAULT_PORT = 4000;
-const parsedPort = Number(process.env.API_PORT ?? DEFAULT_PORT);
-const port = Number.isInteger(parsedPort) && parsedPort > 0 ? parsedPort : DEFAULT_PORT;
+import { createApp } from "./app.js";
+import { env } from "./config/env.js";
+import { closeDriver, verifyDatabaseConnectivity } from "./database/driver.js";
 const app = createApp();
-const server = app.listen(port, () => {
-    process.stdout.write(`SkillGraph API listening on port ${port}\n`);
-});
-function shutdown(signal) {
-    process.stdout.write(`${signal} received; shutting down SkillGraph API\n`);
-    server.close((error) => {
-        if (error) {
-            process.stderr.write('SkillGraph API did not shut down cleanly\n');
-            process.exitCode = 1;
-        }
+let server;
+let isShuttingDown = false;
+async function startServer() {
+    try {
+        await verifyDatabaseConnectivity();
+        process.stdout.write("CognoDB connection verified\n");
+    }
+    catch {
+        process.stderr.write("CognoDB is currently unavailable; the API will report degraded health\n");
+    }
+    server = app.listen(env.API_PORT, () => {
+        process.stdout.write(`SkillGraph API listening on port ${env.API_PORT}\n`);
     });
 }
-process.once('SIGINT', shutdown);
-process.once('SIGTERM', shutdown);
+async function closeHttpServer() {
+    if (!server) {
+        return;
+    }
+    await new Promise((resolve, reject) => {
+        server?.close((error) => {
+            if (error) {
+                reject(error);
+                return;
+            }
+            resolve();
+        });
+        server?.closeIdleConnections();
+    });
+}
+async function shutdown(signal) {
+    if (isShuttingDown) {
+        return;
+    }
+    isShuttingDown = true;
+    process.stdout.write(`${signal} received; shutting down SkillGraph API\n`);
+    await closeHttpServer();
+    await closeDriver();
+    process.stdout.write("SkillGraph API shut down cleanly\n");
+}
+function handleShutdown(signal) {
+    void shutdown(signal).catch(() => {
+        process.stderr.write("SkillGraph API did not shut down cleanly\n");
+        process.exitCode = 1;
+    });
+}
+process.once("SIGINT", handleShutdown);
+process.once("SIGTERM", handleShutdown);
+void startServer().catch(() => {
+    process.stderr.write("SkillGraph API failed to start\n");
+    process.exitCode = 1;
+});
 //# sourceMappingURL=server.js.map

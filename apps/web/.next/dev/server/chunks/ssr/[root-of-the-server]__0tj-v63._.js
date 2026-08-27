@@ -55,7 +55,7 @@ function HomePage() {
                     children: "The web and API workspaces are initialized. CognoDB connectivity and graph data are added in the next phases."
                 }, void 0, false, {
                     fileName: "[project]/apps/web/app/page.tsx",
-                    lineNumber: 14,
+                    lineNumber: 17,
                     columnNumber: 9
                 }, this)
             ]

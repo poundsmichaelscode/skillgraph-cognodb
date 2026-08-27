@@ -1,20 +1,25 @@
-import cors from 'cors';
-import express from 'express';
-import helmet from 'helmet';
+import cors from "cors";
+import express from "express";
+import helmet from "helmet";
+import { env } from "./config/env.js";
+import { checkDatabaseHealth } from "./database/health.js";
 export function createApp() {
     const app = express();
-    app.disable('x-powered-by');
+    app.disable("x-powered-by");
     app.use(helmet());
     app.use(cors({
-        origin: process.env.WEB_ORIGIN ?? 'http://localhost:3000',
-        methods: ['GET'],
+        origin: env.WEB_ORIGIN,
+        methods: ["GET"],
     }));
-    app.use(express.json({ limit: '100kb' }));
-    app.get('/api/v1/health', (_request, response) => {
-        response.status(200).json({
+    app.use(express.json({ limit: "100kb" }));
+    app.get("/api/v1/health", async (_request, response) => {
+        const database = await checkDatabaseHealth();
+        const isReady = database.status === "connected";
+        response.status(isReady ? 200 : 503).json({
             data: {
-                status: 'ok',
-                service: 'skillgraph-api',
+                status: isReady ? "ok" : "degraded",
+                service: "skillgraph-api",
+                database,
             },
         });
     });

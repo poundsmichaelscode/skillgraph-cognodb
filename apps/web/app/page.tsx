@@ -1,4 +1,4 @@
-import { Network } from 'lucide-react';
+import { Network } from "lucide-react";
 
 export default function HomePage() {
   return (
@@ -8,12 +8,15 @@ export default function HomePage() {
           <Network aria-hidden="true" className="size-4 text-[var(--accent)]" />
           Graph-powered career intelligence
         </div>
-        <h1 id="page-title" className="text-4xl font-semibold tracking-tight sm:text-5xl">
+        <h1
+          id="page-title"
+          className="text-4xl font-semibold tracking-tight sm:text-5xl"
+        >
           SkillGraph foundation is ready.
         </h1>
         <p className="mt-5 max-w-xl text-base leading-7 text-[var(--muted)] sm:text-lg">
-          The web and API workspaces are initialized. CognoDB connectivity and graph data are added
-          in the next phases.
+          The web and API workspaces are initialized. CognoDB connectivity and
+          graph data are added in the next phases.
         </p>
       </section>
     </main>

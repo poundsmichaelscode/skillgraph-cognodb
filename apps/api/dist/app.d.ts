@@ -1,2 +1,2 @@
-import express from 'express';
+import express from "express";
 export declare function createApp(): express.Express;
