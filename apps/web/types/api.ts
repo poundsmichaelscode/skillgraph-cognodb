@@ -49,9 +49,7 @@ export interface TechnologySummary {
 }
 
 export type EntityRecord = Record<string, unknown> & { id: string };
-export type RelatedEntity = EntityRecord & {
-  relationship: Record<string, unknown>;
-};
+export type RelatedEntity = EntityRecord & { relationship: Record<string, unknown> };
 
 export interface PersonDetail {
   person: PersonSummary;
@@ -76,6 +74,33 @@ export interface RoleDetail {
   role: RoleSummary;
   skills: RelatedEntity[];
   technologies: RelatedEntity[];
+}
+
+export interface CareerSkill {
+  id: string;
+  name: string;
+  category?: string;
+  requiredLevel?: string;
+  currentLevel?: string;
+}
+
+export interface LearningRecommendation {
+  id: string;
+  title: string;
+  provider?: string;
+  url?: string;
+  format?: string;
+  teachesSkillIds: string[];
+}
+
+export interface CareerPathResult {
+  person: PersonSummary;
+  role: RoleSummary;
+  readinessPercentage: number;
+  existingSkills: CareerSkill[];
+  missingSkills: CareerSkill[];
+  technologies: TechnologySummary[];
+  recommendations: LearningRecommendation[];
 }
 
 export interface ApiErrorBody {

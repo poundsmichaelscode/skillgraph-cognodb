@@ -1,14 +1,18 @@
-# SkillGraph
+# SkillGraph Phase 4 files
 
-SkillGraph is a graph-powered technology skills and career relationship explorer. This repository is being implemented phase by phase for the Wexa AI CognoDB assignment.
+Copy the two files into the matching paths in the repository, then add this API workspace script:
 
-## Phase 1 commands
-
-```bash
-npm install
-npm run dev
+```json
+"db:seed": "tsx src/database/seed.ts"
 ```
 
-The web application runs at `http://localhost:3000` and the API health endpoint is available at `http://localhost:4000/api/v1/health`.
+Run:
 
-Copy `.env.example` to `.env` only on your own machine. Never commit `.env`.
+```bash
+npm run format
+npm run typecheck
+npm run lint
+npm run db:seed --workspace=@skillgraph/api
+```
+
+The seed is fictional, parameterized and idempotent. Re-running it updates matching nodes and relationships without uncontrolled duplication.
