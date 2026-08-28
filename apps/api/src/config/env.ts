@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 import { config } from "dotenv";
@@ -7,15 +8,15 @@ const environmentFile = fileURLToPath(
   new URL("../../../../.env", import.meta.url),
 );
 
-const dotenvResult = config({
-  path: environmentFile,
-  quiet: true,
-});
+if (existsSync(environmentFile)) {
+  const dotenvResult = config({
+    path: environmentFile,
+    quiet: true,
+  });
 
-if (dotenvResult.error) {
-  throw new Error(
-    "Unable to load the root .env file. Confirm that it exists in the repository root.",
-  );
+  if (dotenvResult.error) {
+    throw new Error("Unable to load the environment configuration.");
+  }
 }
 
 const environmentSchema = z.object({
