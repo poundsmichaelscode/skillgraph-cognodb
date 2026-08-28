@@ -8,7 +8,10 @@ const securityHeaders = [
     key: "Permissions-Policy",
     value: "camera=(), microphone=(), geolocation=()",
   },
-  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  {
+    key: "Referrer-Policy",
+    value: "strict-origin-when-cross-origin",
+  },
   {
     key: "Strict-Transport-Security",
     value: "max-age=31536000; includeSubDomains",
@@ -18,11 +21,18 @@ const securityHeaders = [
   { key: "X-Frame-Options", value: "DENY" },
 ];
 
+const selfHostingConfig: Partial<NextConfig> =
+  process.env.VERCEL === "1"
+    ? {}
+    : {
+        output: "standalone",
+        outputFileTracingRoot: resolve(process.cwd(), "../.."),
+      };
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  output: "standalone",
-  outputFileTracingRoot: resolve(process.cwd(), "../.."),
+  ...selfHostingConfig,
   async headers() {
     return [
       {
