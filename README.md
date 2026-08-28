@@ -2,6 +2,14 @@
 
 SkillGraph is a graph-powered technology skills and career relationship explorer built for the Wexa AI CognoDB assignment. It helps users understand how people, skills, technologies, projects, job roles, companies, and learning resources connect—and turns those connections into practical career recommendations.
 
+## Live demo
+
+- **Web application:** [skillgraph-cognodb-web-elbq.vercel.app](https://skillgraph-cognodb-web-elbq.vercel.app)
+- **API health:** [skillgraph-cognodb-api.onrender.com/api/v1/health](https://skillgraph-cognodb-api.onrender.com/api/v1/health)
+- **Screen recording:** [SkillGraph product walkthrough](https://drive.google.com/drive/folders/1JGe9twwgfcUwukDLcl100_yedZMxNVbn?usp=sharing)
+
+The frontend is deployed on Vercel, the Express API runs on Render, and CognoDB Cloud stores the connected graph data. Render's free instance may require a short warm-up after inactivity.
+
 ## Problem
 
 Career data is highly connected. People apply skills on projects, projects use technologies, roles require capabilities, and learning resources teach the skills someone is missing. A relational design can store this information, but multi-hop questions require long join chains and application-side aggregation.
@@ -36,13 +44,14 @@ This supports readable multi-hop traversal, career-gap analysis, explainable rec
 
 ```mermaid
 flowchart LR
-    Browser -->|HTTP/HTTPS| Web[Next.js Web]
-    Web -->|REST /api/v1| API[Express API]
+    Browser -->|HTTPS| Web[Next.js on Vercel]
+    Web -->|REST /api/v1| API[Express API on Render]
     API -->|Neo4j JS Driver / Bolt TLS| CognoDB[(CognoDB Cloud)]
 
     subgraph Backend
       Routes --> Controllers --> Services --> Repositories
     end
+
     API --> Routes
     Repositories --> CognoDB
 ```
@@ -77,7 +86,7 @@ Every node has a stable public string `id`. See [Graph Data Model](docs/data-mod
 | Database       | CognoDB, openCypher, Bolt TLS                                      |
 | Driver         | Official Neo4j JavaScript driver                                   |
 | Testing        | Vitest, Supertest                                                  |
-| Infrastructure | Docker, Docker Compose                                             |
+| Infrastructure | Docker, Docker Compose, Vercel, Render                             |
 
 ## Repository structure
 
@@ -228,15 +237,37 @@ See [Testing](docs/testing.md).
 - Non-root production containers
 - Frontend frame, MIME, referrer, permissions, opener, and transport headers
 
+## Screenshots
+
+### Dashboard
+
+![SkillGraph dashboard](docs/screenshots/dashboard.png)
+
+### Person profile
+
+![SkillGraph person profile](docs/screenshots/person-profile.png)
+
+### Career skill-gap analysis
+
+![SkillGraph career skill-gap analysis](docs/screenshots/career-gap.png)
+
+### Graph explorer
+
+![SkillGraph graph explorer](docs/screenshots/graph-explorer.png)
+
 ## Deployment
 
-Intended production topology:
+The production deployment follows this topology:
 
 ```text
-Managed Next.js hosting → HTTPS REST API → CognoDB Cloud over Bolt TLS
+Browser → Next.js on Vercel → Express API on Render → CognoDB Cloud over Bolt TLS
 ```
 
-Set `NEXT_PUBLIC_API_URL` to the public API base URL at web build time, set `WEB_ORIGIN` to the deployed frontend origin, and configure CognoDB variables only on the API service. Deployment URLs and screenshots are added after production verification.
+- **Frontend:** [skillgraph-cognodb-web-elbq.vercel.app](https://skillgraph-cognodb-web-elbq.vercel.app)
+- **Backend:** [skillgraph-cognodb-api.onrender.com](https://skillgraph-cognodb-api.onrender.com/api/v1/health)
+- **Database:** CognoDB Cloud
+
+`NEXT_PUBLIC_API_URL` contains only the public REST API base URL. `WEB_ORIGIN` restricts backend CORS to the production frontend. CognoDB credentials remain backend-only environment variables on Render and are never included in frontend code or Docker images.
 
 ## Engineering decisions
 
@@ -246,7 +277,8 @@ Set `NEXT_PUBLIC_API_URL` to the public API base URL at web build time, set `WEB
 - Stable public IDs avoid exposing database-internal identities.
 - The seed is repeatable and safe to rerun.
 - Ordinary tests are deterministic; live CognoDB tests are explicitly enabled.
-- Standalone Next.js output and multi-stage builds reduce runtime contents.
+- Standalone Next.js output supports Docker self-hosting, while Vercel uses its managed Next.js output.
+- Multi-stage builds reduce runtime contents and run as non-root users.
 
 ## Future improvements
 
