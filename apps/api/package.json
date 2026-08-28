@@ -17,6 +17,7 @@
     "cors": "^2.8.5",
     "dotenv": "^17.4.2",
     "express": "^5.1.0",
+    "express-rate-limit": "^8.6.2",
     "helmet": "^8.1.0",
     "neo4j-driver": "^6.2.0",
     "zod": "^4.4.3"
