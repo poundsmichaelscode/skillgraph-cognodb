@@ -44,7 +44,7 @@ const presentation = {
     icon: Building2,
     className: "border-slate-500 bg-slate-50 text-slate-950",
   },
-  learningResource: {
+  resource: {
     icon: GraduationCap,
     className: "border-emerald-600 bg-emerald-50 text-emerald-950",
   },

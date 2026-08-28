@@ -108,7 +108,7 @@ export type GraphEntityType =
   | "project"
   | "role"
   | "company"
-  | "learningResource";
+  | "resource";
 
 export interface GraphNode {
   id: string;
