@@ -255,7 +255,7 @@ describe("career skill-gap API", () => {
 describe("safe errors", () => {
   it("returns a sanitized 500 response for an unexpected repository error", async () => {
     catalogMocks.getStats.mockRejectedValue(
-      new Error("bolt+s://private-host secret-password"),
+      new Error("sensitive internal database connection details"),
     );
 
     const response = await request(app).get("/api/v1/stats").expect(500);
@@ -267,7 +267,7 @@ describe("safe errors", () => {
       },
     });
     expect(JSON.stringify(response.body)).not.toMatch(
-      /private-host|password|bolt/i,
+      /sensitive internal database connection details/i,
     );
   });
 
