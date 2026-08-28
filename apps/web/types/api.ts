@@ -49,17 +49,15 @@ export interface TechnologySummary {
 }
 
 export type EntityRecord = Record<string, unknown> & { id: string };
-export type RelatedEntity = EntityRecord & { relationship: Record<string, unknown> };
+export type RelatedEntity = EntityRecord & {
+  relationship: Record<string, unknown>;
+};
 
 export interface PersonDetail {
   person: PersonSummary;
   company: (EntityRecord & { relationship?: Record<string, unknown> }) | null;
   skills: RelatedEntity[];
-  projects: Array<
-    RelatedEntity & {
-      technologies: TechnologySummary[];
-    }
-  >;
+  projects: Array<RelatedEntity & { technologies: TechnologySummary[] }>;
 }
 
 export interface SkillDetail {
@@ -101,6 +99,36 @@ export interface CareerPathResult {
   missingSkills: CareerSkill[];
   technologies: TechnologySummary[];
   recommendations: LearningRecommendation[];
+}
+
+export type GraphEntityType =
+  | "person"
+  | "skill"
+  | "technology"
+  | "project"
+  | "role"
+  | "company"
+  | "learningResource";
+
+export interface GraphNode {
+  id: string;
+  type: GraphEntityType;
+  label: string;
+  properties: Record<string, unknown>;
+}
+
+export interface GraphEdge {
+  id: string;
+  source: string;
+  target: string;
+  type: string;
+  properties: Record<string, unknown>;
+}
+
+export interface GraphResult {
+  center: GraphNode;
+  nodes: GraphNode[];
+  edges: GraphEdge[];
 }
 
 export interface ApiErrorBody {
